@@ -1,0 +1,55 @@
+{
+  "@class": "IndexUnit",
+  "resourceId": "TestSGI_01_CreatedByRestAPI",
+  "name": "TestSGI_01_CreatedByRestAPI",
+  "description": "테스트 후 삭제 | SGI 데이터 모델링 테스트",
+  "kind": "Storage",
+  "type": "IndexUnit",
+  "resourcePath": "Storage/TestSGI_01_CreatedByRestAPI.json",
+  "resourceUUID": "bcc9006e-1eee-403e-b66c-9b37bdaf6a30",
+  "projectId": "dp-global-000000",
+  "workspaceId": "dw-global-000000-default",
+  "tenant": "R1132100527066",
+  "created": "2025-07-17T10:55:01.924863Z",
+  "modified": "2025-07-17T11:16:05.389238Z",
+  "creator": "jle69_gmail",
+  "ceStamp": "85061340-0617-490e-9209-0746601e7f61",
+  "id": "bcc9006e-1eee-403e-b66c-9b37bdaf6a30",
+  "config": {
+    "datamodel": {
+      "classes": [
+        {
+          "name": "DummyData",
+          "parents": [],
+          "pkg": "Rawdata",
+          "attributes": [
+            {
+              "name": "seq",
+              "type": {
+                "dataType": "Integer",
+                "dataStructure": "Singleton"
+              },
+              "annotation": {}
+            },
+            {
+              "name": "title",
+              "type": {
+                "dataType": "String",
+                "dataStructure": "Singleton"
+              },
+              "annotation": {}
+            },
+            {
+              "name": "_text",
+              "type": {
+                "dataType": "String",
+                "dataStructure": "Singleton"
+              },
+              "annotation": {}
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

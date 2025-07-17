@@ -1,0 +1,6 @@
+{
+  "title": "Http Message Not Readable",
+  "status": 400,
+  "detail": "JSON parse error: Could not resolve subtype of [simple type, class com.ds.apollo.dfs.generated.model.AddOrReplaceItem]: missing type id property 'action'",
+  "instance": "uri=/data-factory/api/1/indexunit/bcc9006e-1eee-403e-b66c-9b37bdaf6a30/validateItemsEvent"
+}

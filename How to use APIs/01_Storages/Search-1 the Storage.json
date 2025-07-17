@@ -1,0 +1,22 @@
+{
+  "cards": [
+    {
+      "id": "5c465eb1-3ab4-4506-8f28-bbad2d8b027d",
+      "resourceId": "Test01.CreatedByRestAPI",
+      "projectId": "dp-global-000000",
+      "resourceUUID": "5c465eb1-3ab4-4506-8f28-bbad2d8b027d",
+      "workspaceId": "dw-global-000000-default",
+      "name": "Test01.CreatedByRestAPI",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1752745203249,
+      "lastModified": 1752745203289,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    }
+  ]
+}

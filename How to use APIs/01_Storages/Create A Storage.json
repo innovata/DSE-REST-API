@@ -1,0 +1,38 @@
+{
+  "@class": "ObjectStorage",
+  "resourceId": "Test01.CreatedByRestAPI",
+  "name": "Test01.CreatedByRestAPI",
+  "description": "테스트 후 삭제",
+  "kind": "Storage",
+  "type": "ObjectStorage",
+  "resourcePath": "Storage/Test01.CreatedByRestAPI.json",
+  "resourceUUID": "03b7b1bb-e1c4-458d-9e21-1f6e94c43f36",
+  "projectId": "dp-global-000000",
+  "workspaceId": "dw-global-000000-default",
+  "tenant": "R1132100527066",
+  "created": "2025-07-17T09:40:03.249325Z",
+  "modified": "2025-07-17T09:55:29.136793Z",
+  "creator": "jle69_gmail",
+  "ceStamp": "20beb26c-5641-4502-963f-12885b14afc0",
+  "id": "03b7b1bb-e1c4-458d-9e21-1f6e94c43f36",
+  "config": {
+    "delegations": [
+      {
+        "name": "SemanticGraphIndex.DOSAccount.2",
+        "permission": "read"
+      },
+      {
+        "name": "SemanticGraphIndex.DOSAccount.2",
+        "permission": "write"
+      },
+      {
+        "name": "PPES.DosAccount",
+        "permission": "execute"
+      },
+      {
+        "name": "DatasetGovernance",
+        "permission": "read"
+      }
+    ]
+  }
+}
