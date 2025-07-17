@@ -1,5 +1,3 @@
-requests 
-openpyxl
-xlrd
+requests
 tqdm
 
