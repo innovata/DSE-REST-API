@@ -8,8 +8,10 @@ NETVIBES / Data Science Experience REST API
 ## 1. INTRODUCTION  
 <!-- ############################################################ -->
 
-DSE-Agent 패키지는 클라이언트 사이드에서 클라우드 솔루션인 DSE 사용을 지원하는 몇가지 기능을 제공합니다.
 'DSE (Data Science Experience)' 는 NETVIBES 브랜드의 솔루션 포르폴리오 중 하나인 솔루션명 입니다.  
+DSE의 효과적인 사용을 위해 'dserestapi' 패키지를 개발하였으며,   
+이 패키지는 클라이언트 사이드에서 클라우드 솔루션인 DSE의 편리한 사용을 위한 몇가지 기능을 제공합니다.  
+DSE 솔루션의 모든 기능을 REST API 로 컨트롤 할 수는 없으며, Data Engineering 과 관련된 기능만을 제공합니다.  
 
 
 <!-- ############################################################ -->
@@ -43,7 +45,7 @@ https://github.com/innovata/DevDocs/blob/main/PythonEnv.md
         https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADocQuickRefs/DSDocHome.htm 
 
 REST API를 활용하여 직접 클라이언트를 개발하는 것을 권장하며, 본 패키지는 편의를 위해 제공할 뿐이며 사용 기능 개선 및 버그에 대한 후속 작업을 지원하지 않습니다.  
-커맨드 라인 사용법은 지원하지 않으며, 본 패키지를 임포트하여 클라이언트를 개발하길 바랍니다.  
+커맨드 라인 사용법은 지원하지 않으며, 본 패키지를 임포트하여 개별적으로 클라이언트를 개발하길 바랍니다.  
 
 
 
