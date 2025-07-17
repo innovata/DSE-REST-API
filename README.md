@@ -20,18 +20,60 @@ DSE 솔루션의 모든 기능을 REST API 로 컨트롤 할 수는 없으며, D
 
 ### [1] 파이썬 가상환경 구성 (Setup Python Virtual Environment) 
 
-다음 링크의 가이드를 참조하세요.  
+1.1. '명령 프롬프트' 앱 실행 
 
-https://github.com/innovata/DevDocs/blob/main/PythonEnv.md  
+        Windows 키
+        cmd 입력
+
+1.2. 프로젝트 폴더 생성 
+
+        mkdir MyNewProject
+        cd MyNewProject
+
+        
+파이썬 버전 확인
+
+        python --version 
+        <!--출력: Python 3.12.9 -->
+
+1.3. 파이썬 가상환경 만들기  
+
+        python -m venv .env 
+
+가상환경으로 전환  
+
+        .env/Scripts/activate
+
+실행하면 다음과 같이 나옵니다.
+
+        (.env) C:\YOUR_PATH\MyNewProject>
+
+지금까지 파이썬 가상환경이 만들었습니다.  
+이제 이 환경에 필요한 패키지들을 설치해야 합니다.  
 
 
-### [2] dsx-agent 패키지 설치 
+### [2] dserestapi 패키지 설치 
 
-파이썬 가상환경에서, 다음 커멘드를 실행하여 패키지 설치.
+2.1. dserestapi 설치
 
-    pip install dse-agent
+pip 업그레이드 (선택사항)
 
-    (pip install -r requirements.txt)
+        python -m pip install --upgrade pip 
+
+dserestapi 설치  
+
+        pip install dserestapi 
+
+
+2.2. 파이썬 실행 및 설치 확인 
+
+        python 
+
+        >>> from dserestapi import Storages
+        >>> api = Storages()
+        >>> 
+        <!-- 빠져나오기: 'Ctrl+Z' -->
+
 
 
 
