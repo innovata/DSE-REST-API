@@ -1,7 +1,0 @@
-{
-  "type": "about:blank",
-  "title": "Not Found",
-  "status": 404,
-  "detail": "Storage not found Exception with resourceUUID : 5c465eb1-3ab4-4506-8f28-bbad2d8b027d Storage not found with resourceUUID 5c465eb1-3ab4-4506-8f28-bbad2d8b027d",
-  "instance": "/data-factory/api/1/storage/5c465eb1-3ab4-4506-8f28-bbad2d8b027d"
-}

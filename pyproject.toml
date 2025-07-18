@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dserestapi"
-version = "0.1.4"
+version = "0.2.0"
 description = "NETVIBES / Data Science Experience REST API"
 authors = [{name = "JLE69", email = "jonghyuk.lee@3ds.com"}]
 license = {text = "NONE"}

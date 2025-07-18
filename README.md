@@ -18,41 +18,17 @@ DSE 솔루션의 모든 기능을 REST API 로 컨트롤 할 수는 없으며, D
 ## 2. 환경구성 
 <!-- ############################################################ -->
 
-### [1] 파이썬 가상환경 구성 (Setup Python Virtual Environment) 
+### [1] 3DEXPERIENCE Platform CLM Agent 생성
 
-1.1. '명령 프롬프트' 앱 실행 
+CLM Agent ID/Password 생성 방법은 다음의 영상가이드를 참조하세요.
+(추가 예정)
 
-        Windows 키
-        cmd 입력
-
-1.2. 프로젝트 폴더 생성 
-
-        mkdir MyNewProject
-        cd MyNewProject
-
-        
-파이썬 버전 확인
-
-        python --version 
-        <!--출력: Python 3.12.9 -->
-
-1.3. 파이썬 가상환경 만들기  
-
-        python -m venv .env 
-
-가상환경으로 전환  
-
-        .env/Scripts/activate
-
-실행하면 다음과 같이 나옵니다.
-
-        (.env) C:\YOUR_PATH\MyNewProject>
-
-지금까지 파이썬 가상환경이 만들었습니다.  
-이제 이 환경에 필요한 패키지들을 설치해야 합니다.  
+ 
 
 
-### [2] dserestapi 패키지 설치 
+### [2] 파이썬 가상환경(Python Virtual Environment) 생성 및 dserestapi 패키지 설치 
+
+
 
 2.1. dserestapi 설치
 
@@ -61,6 +37,7 @@ pip 업그레이드 (선택사항)
         python -m pip install --upgrade pip 
 
 dserestapi 설치  
+PYPI "https://pypi.org/project/dserestapi/" 를 참조하세요.
 
         pip install dserestapi 
 
@@ -84,9 +61,10 @@ dserestapi 설치
 
 본 패키지는 공식적으로 제공되는 프로그램이 아닙니다.  
 다쏘시스템에서는 다음 링크에서 공식적인 REST API를 제공합니다.  
-        https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADocQuickRefs/DSDocHome.htm 
+- https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADocQuickRefs/DSDocHome.htm   
+- https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADataFactoryStudioWS/datafactorystudio_v1.htm   
 
-REST API를 활용하여 직접 클라이언트를 개발하는 것을 권장하며, 본 패키지는 편의를 위해 제공할 뿐이며 사용 기능 개선 및 버그에 대한 후속 작업을 지원하지 않습니다.  
+REST API를 활용하여 직접 클라이언트를 개발하는 것을 권장하며, 본 패키지는 편의를 위해 제공할 뿐 사용 기능 개선 및 버그에 대한 후속 작업을 지원하지 않습니다.  
 커맨드 라인 사용법은 지원하지 않으며, 본 패키지를 임포트하여 개별적으로 클라이언트를 개발하길 바랍니다.  
 
 
@@ -96,25 +74,33 @@ REST API를 활용하여 직접 클라이언트를 개발하는 것을 권장하
 
 
 <!-- ############################################################ -->
-## 4. 사용 예제 | CLM Agent 생성 
+## 4. 사용 예제 | CLM Agent ID/PW 설정 
 <!-- ############################################################ -->
 
-CLM Agent ID/Password 생성 방법은 다음의 영상가이드를 참조하세요.
+다음의 예제에서처럼 사용자 본인의 ID/PW 정보를 입력한 후, 패키지를 임포트해야 합니다.  
+방법 1과 2 중 선택하여 사용할 수 있지만, ID/PW를 하드코딩하는 방법은 위험하므로 '방법-1'을 권장합니다.  
 
 
         import os, sys 
         
+        <!-- 방법-1 (권장)-->
+        os.environ["CLM_AGENT_CREDENTIAL_PATH"] = "YOUR_ID_PW_JSON_FILE_PATH"
+
+        <!-- 방법-2 (선택사항) -->
         os.environ["CLM_AGENT_ID"] = "YOUR_ID"
         os.environ["CLM_AGENT_PASSWORD"] = "YOUR_PASSWORD"
-        <!-- 또는 -->
-        os.environ["CLM_AGENT_CREDENTIAL_PATH"] = "JSON_FILE_PATH_INCLUDING_ID_PW"
 
         os.environ["3DX_PLATFORM_TENANT_URI"] = "YOUR_3DX_PLATFORM_TENANT_URI" # 예시: "https://r1132100527066-apk2-sgi.3dexperience.3ds.com:443"
 
         from dsxagent import restapi 
 
 
+'YOUR_ID_PW_JSON_FILE_PATH' 데이터 구조는 다음과 같습니다.  
 
+        {
+                "Agent ID": "YOUR_ID",
+                "Agent Password": "YOUR_PASSWORD"
+        }
 
 
 
@@ -172,7 +158,7 @@ cards[0] 샘플 데이터 -->
         }
 
 
-추가 예제는 ./How to use APIs/01_Storages/01_get_storages_list.py 을 참조하세요.  
+추가 예제는 ./How to use APIs/01_Storages/Tutorial.ipynb 을 참조하세요.  
 
 
 ### [1.2] dserestapi.ObjectStorage 
@@ -202,7 +188,7 @@ res에는 JSON Data가 없으므로 다음과 같이 확인합니다.
 1.3.1. 데이터 모델링 
 
 데이터 스키마를 data_modeling_config 와 같이 정의해야 합니다.  
-data_modeling_config의 상세 내용은 ./How to use APIs/01_Storages/01_ingest_data.py 을 참조하세요.    
+data_modeling_config의 상세 내용은 ./How to use APIs/01_Storages/Tutorial.ipynb 을 참조하세요.    
 
         from dserestapi import Storages
         api = Storages()
@@ -235,7 +221,7 @@ data_modeling_config의 상세 내용은 ./How to use APIs/01_Storages/01_ingest
         <!-- <Response [200]> -->
 
 
-추가 예제는 ./How to use APIs/03_SemanticGraphIndex/01_ingest_data.py 을 참조하세요.  
+추가 예제는 ./How to use APIs/03_SemanticGraphIndex/Tutorial.ipynb 을 참조하세요.  
 
 
 

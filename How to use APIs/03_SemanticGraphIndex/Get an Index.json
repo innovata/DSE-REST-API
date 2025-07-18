@@ -6,15 +6,15 @@
   "kind": "Storage",
   "type": "IndexUnit",
   "resourcePath": "Storage/TestSGI_01_CreatedByRestAPI.json",
-  "resourceUUID": "bcc9006e-1eee-403e-b66c-9b37bdaf6a30",
+  "resourceUUID": "5327b9fc-dbd7-40dc-9136-082e0cc1c6d8",
   "projectId": "dp-global-000000",
   "workspaceId": "dw-global-000000-default",
   "tenant": "R1132100527066",
   "created": "2025-07-17T10:55:01.924863Z",
-  "modified": "2025-07-17T11:16:05.389238Z",
+  "modified": "2025-07-18T07:02:49.43978Z",
   "creator": "jle69_gmail",
-  "ceStamp": "85061340-0617-490e-9209-0746601e7f61",
-  "id": "bcc9006e-1eee-403e-b66c-9b37bdaf6a30",
+  "ceStamp": "b8d766b9-bb0c-44c1-a7e0-7e34a04d120b",
+  "id": "5327b9fc-dbd7-40dc-9136-082e0cc1c6d8",
   "config": {
     "datamodel": {
       "classes": [

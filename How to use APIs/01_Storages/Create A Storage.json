@@ -1,20 +1,20 @@
 {
   "@class": "ObjectStorage",
-  "resourceId": "Test01.CreatedByRestAPI",
-  "name": "Test01.CreatedByRestAPI",
+  "resourceId": "TestObject01.CreatedByRestAPI",
+  "name": "TestObject01.CreatedByRestAPI",
   "description": "테스트 후 삭제",
   "kind": "Storage",
   "type": "ObjectStorage",
-  "resourcePath": "Storage/Test01.CreatedByRestAPI.json",
-  "resourceUUID": "03b7b1bb-e1c4-458d-9e21-1f6e94c43f36",
+  "resourcePath": "Storage/TestObject01.CreatedByRestAPI.json",
+  "resourceUUID": "e56cf961-01a0-43a6-8b2b-0061f1477169",
   "projectId": "dp-global-000000",
   "workspaceId": "dw-global-000000-default",
   "tenant": "R1132100527066",
-  "created": "2025-07-17T09:40:03.249325Z",
-  "modified": "2025-07-17T09:55:29.136793Z",
+  "created": "2025-07-18T04:39:47.827498Z",
+  "modified": "2025-07-18T05:03:46.687827Z",
   "creator": "jle69_gmail",
-  "ceStamp": "20beb26c-5641-4502-963f-12885b14afc0",
-  "id": "03b7b1bb-e1c4-458d-9e21-1f6e94c43f36",
+  "ceStamp": "1668ffe7-b8bf-44a2-8934-7a689920a972",
+  "id": "e56cf961-01a0-43a6-8b2b-0061f1477169",
   "config": {
     "delegations": [
       {

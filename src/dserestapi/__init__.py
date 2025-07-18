@@ -24,16 +24,23 @@ import threading
 ############################################################
 # 전역변수
 ############################################################
+import json 
 
 try:
+    with open(os.environ["CLM_AGENT_CREDENTIAL_PATH"], "r", encoding="utf-8") as f:
+        cred = json.load(f)
+    agent_id, agent_pw = cred['Agent ID'], cred['Agent Password']
+except Exception as e:
+    agent_id, agent_pw = os.environ["CLM_AGENT_ID"], os.environ["CLM_AGENT_PASSWORD"]
+finally:
     SESS = requests.Session()
-    SESS.auth = (os.environ["CLM_AGENT_ID"], os.environ["CLM_AGENT_PASSWORD"])
+    SESS.auth = (agent_id, agent_pw)
 
+
+try:
     REST_API_URL = os.environ['3DX_PLATFORM_TENANT_URI'] + "/data-factory"
 except Exception as e:
     print(f"\nERROR | {e}")
-    raise 
-
 
 
 
@@ -202,22 +209,22 @@ class ObjectStorage:
             pbar.update(1)
         return print_response(res)
 
-    def upload_files_v1(self, resourceUUID:str, files:list):
+    def upload_files_v1(self, resourceUUID:str, files:list, path:list=None):
         with tqdm(total=len(files), desc="DFS에 파일 업로드") as pbar:
             threads = []
             for file in files:
-                th = threading.Thread(target=self.upload, args=(resourceUUID, file, pbar))
+                th = threading.Thread(target=self.upload, args=(resourceUUID, file, path, pbar))
                 th.start()
                 threads.append(th)
 
             for th in threads:
                 th.join()
 
-    def upload_files(self, resourceUUID:str, files):
+    def upload_files(self, resourceUUID:str, files:list, path:list=None):
         response_li = []
         with ThreadPoolExecutor() as executor:
             # 각 파일에 대해 self.upload 작업 스레드에 제출
-            futures = [executor.submit(self.upload, resourceUUID, file) for file in files]
+            futures = [executor.submit(self.upload, resourceUUID, file, path) for file in files]
 
             # 각 future가 완료되면 결과(response)를 받아 response_li 리스트에 저장
             # tqdm에 total을 전체 작업 개수로 지정
@@ -259,10 +266,10 @@ class SemanticGraphIndex:
         )
         return print_response(res) 
 
-    def validateItemsEvent(self, resourceUUID):
+    def validateItemsEvent(self, resourceUUID:str, action:str, data:list):
         res = SESS.post(
             url=f"{self._url}/{resourceUUID}/validateItemsEvent",
-            json=["null"]
+            json=data_transform_01(action=action, data=data)
         )
         return print_response(res) 
 

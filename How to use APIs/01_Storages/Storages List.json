@@ -433,24 +433,6 @@
       }
     },
     {
-      "id": "e1730c37-37c6-4b43-a59c-22286a39496b",
-      "resourceId": "DATASET",
-      "projectId": "dp-netvibestrainingprogram-881699",
-      "resourceUUID": "e1730c37-37c6-4b43-a59c-22286a39496b",
-      "workspaceId": "dw-netvibestrainingprogram-881699-biginnerlevel",
-      "name": "DATASET",
-      "creator": "jle69",
-      "kind": "Storage",
-      "type": "ObjectStorage",
-      "created": 1752471182303,
-      "lastModified": 1752471182337,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
       "id": "fa720da6-8f57-49b0-ba8e-ce57f3fca92d",
       "resourceId": "DATASET",
       "projectId": "dp-dseagent-716118",
@@ -462,6 +444,42 @@
       "type": "ObjectStorage",
       "created": 1751874395411,
       "lastModified": 1751874395442,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "3eb778e6-a1fb-48a3-81a4-eeacba7282ea",
+      "resourceId": "DATASET",
+      "projectId": "901e3c05-6645-4ddb-b263-f87749f43231",
+      "resourceUUID": "3eb778e6-a1fb-48a3-81a4-eeacba7282ea",
+      "workspaceId": "dw-6645-4ddb-youtubedataanalytics",
+      "name": "DATASET",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1752297014907,
+      "lastModified": 1752297014916,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "e1730c37-37c6-4b43-a59c-22286a39496b",
+      "resourceId": "DATASET",
+      "projectId": "dp-netvibestrainingprogram-881699",
+      "resourceUUID": "e1730c37-37c6-4b43-a59c-22286a39496b",
+      "workspaceId": "dw-netvibestrainingprogram-881699-biginnerlevel",
+      "name": "DATASET",
+      "creator": "jle69",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1752471182303,
+      "lastModified": 1752471182337,
       "permissions": {
         "read": true,
         "write": true,
@@ -498,24 +516,6 @@
       "type": "ObjectStorage",
       "created": 1752125255046,
       "lastModified": 1752125277066,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
-      "id": "3eb778e6-a1fb-48a3-81a4-eeacba7282ea",
-      "resourceId": "DATASET",
-      "projectId": "901e3c05-6645-4ddb-b263-f87749f43231",
-      "resourceUUID": "3eb778e6-a1fb-48a3-81a4-eeacba7282ea",
-      "workspaceId": "dw-6645-4ddb-youtubedataanalytics",
-      "name": "DATASET",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "ObjectStorage",
-      "created": 1752297014907,
-      "lastModified": 1752297014916,
       "permissions": {
         "read": true,
         "write": true,
@@ -1909,24 +1909,6 @@
       }
     },
     {
-      "id": "12e9153a-205b-4bf4-b44c-73ba2fba3129",
-      "resourceId": "RestAPISamples",
-      "projectId": "dp-dseagent-716118",
-      "resourceUUID": "12e9153a-205b-4bf4-b44c-73ba2fba3129",
-      "workspaceId": "dw-dseagent-716118-workspace",
-      "name": "RestAPISamples",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "IndexUnit",
-      "created": 1751951889850,
-      "lastModified": 1751951889855,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
       "id": "5c27c233-e6d4-484d-9966-5b40baa5617c",
       "resourceId": "S7E_3DS_TESTPRJ01",
       "projectId": "dp-global-000000",
@@ -2172,78 +2154,6 @@
       "type": "IndexUnit",
       "created": 1751698308662,
       "lastModified": 1751698308608,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
-      "id": "5c465eb1-3ab4-4506-8f28-bbad2d8b027d",
-      "resourceId": "Test01.CreatedByRestAPI",
-      "projectId": "dp-global-000000",
-      "resourceUUID": "5c465eb1-3ab4-4506-8f28-bbad2d8b027d",
-      "workspaceId": "dw-global-000000-default",
-      "name": "Test01.CreatedByRestAPI",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "ObjectStorage",
-      "created": 1752745203249,
-      "lastModified": 1752745203289,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
-      "id": "0a28ee53-4def-4c92-ba75-87537d83185f",
-      "resourceId": "TestDATASET-01",
-      "projectId": "dp-global-000000",
-      "resourceUUID": "0a28ee53-4def-4c92-ba75-87537d83185f",
-      "workspaceId": "dw-global-000000-default",
-      "name": "TestDATASET-01",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "ObjectStorage",
-      "created": 1751963717406,
-      "lastModified": 1751963717408,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
-      "id": "5bb87e11-3a87-42de-9c6c-42bbb92ed716",
-      "resourceId": "TestSGI-01",
-      "projectId": "dp-global-000000",
-      "resourceUUID": "5bb87e11-3a87-42de-9c6c-42bbb92ed716",
-      "workspaceId": "dw-global-000000-default",
-      "name": "TestSGI-01",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "IndexUnit",
-      "created": 1751956443071,
-      "lastModified": 1752047167891,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
-      "id": "fad1c5cd-5f74-41fb-83fa-c1721f602c82",
-      "resourceId": "TestSGI-02",
-      "projectId": "dp-global-000000",
-      "resourceUUID": "fad1c5cd-5f74-41fb-83fa-c1721f602c82",
-      "workspaceId": "dw-global-000000-default",
-      "name": "TestSGI-02",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "IndexUnit",
-      "created": 1752053296513,
-      "lastModified": 1752053296519,
       "permissions": {
         "read": true,
         "write": true,
