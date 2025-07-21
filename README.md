@@ -21,13 +21,17 @@ DSE 솔루션의 모든 기능을 REST API 로 컨트롤 할 수는 없으며, D
 ### [1] 3DEXPERIENCE Platform CLM Agent 생성
 
 CLM Agent ID/Password 생성 방법은 다음의 영상가이드를 참조하세요.
-(추가 예정)
 
- 
+[CLM Agent 생성](https://www.youtube.com/watch?v=CUZVZQgnaok)  
+[![01 CLM Agent 생성 desc](https://img.youtube.com/vi/CUZVZQgnaok/0.jpg)](https://youtu.be/CUZVZQgnaok)
+
 
 
 ### [2] 파이썬 가상환경(Python Virtual Environment) 생성 및 dserestapi 패키지 설치 
 
+
+[DSE REST API 패키지 설치](https://www.youtube.com/watch?v=_e98D1RklDs)  
+[![02 DSE REST API 패키지 설치](https://img.youtube.com/vi/_e98D1RklDs/0.jpg)](https://youtu.be/_e98D1RklDs)
 
 
 2.1. dserestapi 설치
@@ -50,6 +54,7 @@ PYPI "https://pypi.org/project/dserestapi/" 를 참조하세요.
         >>> api = Storages()
         >>> 
         <!-- 빠져나오기: 'Ctrl+Z' -->
+
 
 
 
