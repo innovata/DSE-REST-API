@@ -1,17 +1,17 @@
 {
   "cards": [
     {
-      "id": "e56cf961-01a0-43a6-8b2b-0061f1477169",
-      "resourceId": "TestObject01.CreatedByRestAPI",
+      "id": "1395c39b-eb88-433f-8974-9a3afe9f38a3",
+      "resourceId": "TestObject-04.CreatedByRestAPI",
       "projectId": "dp-global-000000",
-      "resourceUUID": "e56cf961-01a0-43a6-8b2b-0061f1477169",
+      "resourceUUID": "1395c39b-eb88-433f-8974-9a3afe9f38a3",
       "workspaceId": "dw-global-000000-default",
-      "name": "TestObject01.CreatedByRestAPI",
+      "name": "TestObject-04.CreatedByRestAPI",
       "creator": "jle69_gmail",
       "kind": "Storage",
       "type": "ObjectStorage",
-      "created": 1752813587827,
-      "lastModified": 1752815026687,
+      "created": 1753435815335,
+      "lastModified": 1753435815339,
       "permissions": {
         "read": true,
         "write": true,

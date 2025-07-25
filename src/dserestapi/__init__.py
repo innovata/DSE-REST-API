@@ -136,7 +136,7 @@ class Storages:
         return print_response(res)
     
     # 스토리지 Import
-    def import_storage(self, resource_uuid):
+    def import_(self, resource_uuid):
         res = SESS.post(
             url=f"{self._url}/import",
             json={
@@ -146,15 +146,15 @@ class Storages:
         return print_response(res)
 
     # 스토리지 Export
-    def export_storage(self, resource_uuid):
+    def export_(self, resource_uuid):
         res = SESS.get(
             url=f"{self._url}/{resource_uuid}/export"
         )
         return print_response(res)
 
     # 스토리지 비움
-    def clean_storage(self, resource_uuid):
-        res = SESS.get(
+    def clear(self, resource_uuid):
+        res = SESS.patch(
             url=f"{self._url}/{resource_uuid}/clear"
         )
         return print_response(res)

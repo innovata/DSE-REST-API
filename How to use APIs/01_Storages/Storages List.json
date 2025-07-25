@@ -433,24 +433,6 @@
       }
     },
     {
-      "id": "fa720da6-8f57-49b0-ba8e-ce57f3fca92d",
-      "resourceId": "DATASET",
-      "projectId": "dp-dseagent-716118",
-      "resourceUUID": "fa720da6-8f57-49b0-ba8e-ce57f3fca92d",
-      "workspaceId": "dw-dseagent-716118-workspace",
-      "name": "DATASET",
-      "creator": "jle69_gmail",
-      "kind": "Storage",
-      "type": "ObjectStorage",
-      "created": 1751874395411,
-      "lastModified": 1751874395442,
-      "permissions": {
-        "read": true,
-        "write": true,
-        "execute": true
-      }
-    },
-    {
       "id": "3eb778e6-a1fb-48a3-81a4-eeacba7282ea",
       "resourceId": "DATASET",
       "projectId": "901e3c05-6645-4ddb-b263-f87749f43231",
@@ -516,6 +498,24 @@
       "type": "ObjectStorage",
       "created": 1752125255046,
       "lastModified": 1752125277066,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "fa720da6-8f57-49b0-ba8e-ce57f3fca92d",
+      "resourceId": "DATASET",
+      "projectId": "dp-dseagent-716118",
+      "resourceUUID": "fa720da6-8f57-49b0-ba8e-ce57f3fca92d",
+      "workspaceId": "dw-dseagent-716118-workspace",
+      "name": "DATASET",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1751874395411,
+      "lastModified": 1751874395442,
       "permissions": {
         "read": true,
         "write": true,
@@ -624,6 +624,24 @@
       "type": "IndexUnit",
       "created": 1734501357681,
       "lastModified": 1734501357677,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "25626555-7e90-4907-91e5-313870a6bb1d",
+      "resourceId": "DummyData",
+      "projectId": "dp-netvibestrainingprogram-881699",
+      "resourceUUID": "25626555-7e90-4907-91e5-313870a6bb1d",
+      "workspaceId": "dw-netvibestrainingprogram-881699-biginnerlevel",
+      "name": "DummyData",
+      "creator": "jle69",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1753176698529,
+      "lastModified": 1753179183318,
       "permissions": {
         "read": true,
         "write": true,
@@ -2154,6 +2172,42 @@
       "type": "IndexUnit",
       "created": 1751698308662,
       "lastModified": 1751698308608,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "82b61588-a6b6-4c4b-9b72-11e45736dfc5",
+      "resourceId": "TestObject-02.CreatedByRestAPI",
+      "projectId": "dp-global-000000",
+      "resourceUUID": "82b61588-a6b6-4c4b-9b72-11e45736dfc5",
+      "workspaceId": "dw-global-000000-default",
+      "name": "TestObject-02.CreatedByRestAPI",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1752815420121,
+      "lastModified": 1752815420123,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "5327b9fc-dbd7-40dc-9136-082e0cc1c6d8",
+      "resourceId": "TestSGI_01_CreatedByRestAPI",
+      "projectId": "dp-global-000000",
+      "resourceUUID": "5327b9fc-dbd7-40dc-9136-082e0cc1c6d8",
+      "workspaceId": "dw-global-000000-default",
+      "name": "TestSGI_01_CreatedByRestAPI",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1752749701924,
+      "lastModified": 1752822169439,
       "permissions": {
         "read": true,
         "write": true,
