@@ -95,7 +95,7 @@ class Storages:
         return print_response(res)
 
     # 스토리지 검색-1
-    def search_by_name(self, name:str, workspace_id:str="dw-global-000000-default"):
+    def search_by_name(self, name:str, workspace_id="dw-global-000000-default"):
         res = SESS.post(
             url=f"{self._url}/filter",
             json={
@@ -136,16 +136,14 @@ class Storages:
         return print_response(res)
     
     # 스토리지 Import
-    def import_(self, resource_uuid):
+    def import_(self, payload:dict):
         res = SESS.post(
             url=f"{self._url}/import",
-            json={
-
-            }
+            json=payload
         )
         return print_response(res)
 
-    # 스토리지 Export
+    # 스토리지 Export Config 
     def export_(self, resource_uuid):
         res = SESS.get(
             url=f"{self._url}/{resource_uuid}/export"
@@ -185,8 +183,13 @@ class ObjectStorage:
         )
 
     def upload(self, resourceUUID:str, file:str, path:str=None, pbar:object=None):
+        dirname = os.path.dirname(file) 
+        filename = os.path.basename(file)
+        print(f"업로드할 파일: {filename}")
+        
         # DFS 스토리지상의 파일 절대경로
-        path = path if path else str(Path(file).as_posix())
+        dfs_abspath = os.path.join(path, filename) if path else str(Path(file).as_posix())
+        print(f"\nDFS 스토리지상의 파일 절대경로: '{dfs_abspath}'")
 
         with open(file, 'rb') as f:
             file_content = f.read()
@@ -197,8 +200,8 @@ class ObjectStorage:
             json={
                 "files": [
                     {
-                        "id": path, 
-                        "filename": os.path.basename(file),
+                        "id": dfs_abspath, 
+                        "filename": filename,
                         "content": encoded_content,
                         "filesize": os.path.getsize(file)
                     }

@@ -125,7 +125,7 @@ REST API를 활용하여 직접 클라이언트를 개발하는 것을 권장하
         data = res.json() 
 
 data 샘플:  
-./How to use APIs/01_Storages/Storages List.json 파일을 참조하세요.  
+./How to use APIs/Storages List.json 파일을 참조하세요. 
 
 
 
@@ -163,7 +163,7 @@ cards[0] 샘플 데이터 -->
         }
 
 
-추가 예제는 ./How to use APIs/01_Storages/Tutorial.ipynb 을 참조하세요.  
+추가 예제는 ./How to use APIs/Tutorial.ipynb 을 참조하세요.  
 
 
 ### [1.2] dserestapi.ObjectStorage 
@@ -193,7 +193,7 @@ res에는 JSON Data가 없으므로 다음과 같이 확인합니다.
 1.3.1. 데이터 모델링 
 
 데이터 스키마를 data_modeling_config 와 같이 정의해야 합니다.  
-data_modeling_config의 상세 내용은 ./How to use APIs/01_Storages/Tutorial.ipynb 을 참조하세요.    
+data_modeling_config의 상세 내용은 ./How to use APIs/Tutorial.ipynb 을 참조하세요.    
 
         from dserestapi import Storages
         api = Storages()
@@ -226,9 +226,6 @@ data_modeling_config의 상세 내용은 ./How to use APIs/01_Storages/Tutorial.
         <!-- <Response [200]> -->
 
 
-추가 예제는 ./How to use APIs/03_SemanticGraphIndex/Tutorial.ipynb 을 참조하세요.  
-
-
-
+추가 예제는 ./How to use APIs/Tutorial.ipynb 을 참조하세요.  
 
 
