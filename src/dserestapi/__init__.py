@@ -52,8 +52,8 @@ except Exception as e:
 ############################################################
 
 def print_response(response):
-    print("\n응답코드-->", response.status_code)
-    if response.status_code > 399:
+    # print("\n응답코드-->", response.status_code)
+    if response.status_code >= 400:
         print("\n\n응답코드가 2xx 또는 3xx 대역이 아닐 경우 아래와 같이 표시됩니다-->")
         pp.pprint(response.__dict__)
     return response
@@ -168,9 +168,9 @@ class ObjectStorage:
 
     _url = f"{REST_API_URL}/resources/v1/objectstorage"
 
-    def multicheckin(self, resourceUUID:str):
+    def multicheckin(self, resource_uuid:str):
         res = SESS.post(
-            url=f"{self._url}/{resourceUUID}/multicheckin", 
+            url=f"{self._url}/{resource_uuid}/multicheckin", 
             json={
                 'objects': [
                     {
@@ -182,21 +182,18 @@ class ObjectStorage:
             } 
         )
 
-    def upload(self, resourceUUID:str, file:str, path:str=None, pbar:object=None):
-        dirname = os.path.dirname(file) 
+    def upload(self, resource_uuid:str, file:str, path:str=None, pbar:object=None):
         filename = os.path.basename(file)
-        print(f"업로드할 파일: {filename}")
         
         # DFS 스토리지상의 파일 절대경로
         dfs_abspath = os.path.join(path, filename) if path else str(Path(file).as_posix())
-        print(f"\nDFS 스토리지상의 파일 절대경로: '{dfs_abspath}'")
 
         with open(file, 'rb') as f:
             file_content = f.read()
             encoded_content = base64.b64encode(file_content).decode('utf-8')
 
         res = SESS.post(
-            url=f"{self._url}/{resourceUUID}/upload", 
+            url=f"{self._url}/{resource_uuid}/upload", 
             json={
                 "files": [
                     {
@@ -212,22 +209,22 @@ class ObjectStorage:
             pbar.update(1)
         return print_response(res)
 
-    def upload_files_v1(self, resourceUUID:str, files:list, path:list=None):
+    def upload_files_v1(self, resource_uuid:str, files:list, path:list=None):
         with tqdm(total=len(files), desc="DFS에 파일 업로드") as pbar:
             threads = []
             for file in files:
-                th = threading.Thread(target=self.upload, args=(resourceUUID, file, path, pbar))
+                th = threading.Thread(target=self.upload, args=(resource_uuid, file, path, pbar))
                 th.start()
                 threads.append(th)
 
             for th in threads:
                 th.join()
 
-    def upload_files(self, resourceUUID:str, files:list, path:list=None):
+    def upload_files(self, resource_uuid:str, files:list, path:list=None):
         response_li = []
         with ThreadPoolExecutor() as executor:
             # 각 파일에 대해 self.upload 작업 스레드에 제출
-            futures = [executor.submit(self.upload, resourceUUID, file, path) for file in files]
+            futures = [executor.submit(self.upload, resource_uuid, file, path) for file in files]
 
             # 각 future가 완료되면 결과(response)를 받아 response_li 리스트에 저장
             # tqdm에 total을 전체 작업 개수로 지정
@@ -237,7 +234,7 @@ class ObjectStorage:
 
         return response_li
 
-    def commit(self, resourceUUID:str):
+    def commit(self, resource_uuid:str):
         pass 
 
 
@@ -256,36 +253,36 @@ class SemanticGraphIndex:
 
     _url = f"{REST_API_URL}/resources/v1/indexunit"
 
-    def ingest(self, resourceUUID:str, data:list):
+    def ingest(self, resource_uuid:str, data:list):
         res = SESS.post(
-            url=f"{self._url}/{resourceUUID}/ingest",
+            url=f"{self._url}/{resource_uuid}/ingest",
             json=data_transform_01("AddOrReplaceItem", data)
         )
         return print_response(res) 
 
-    def notification(self, resourceUUID):
+    def notification(self, resource_uuid):
         res = SESS.get(
-            url=f"{self._url}/{resourceUUID}/notification",
+            url=f"{self._url}/{resource_uuid}/notification",
         )
         return print_response(res) 
 
-    def validateItemsEvent(self, resourceUUID:str, action:str, data:list):
+    def validateItemsEvent(self, resource_uuid:str, action:str, data:list):
         res = SESS.post(
-            url=f"{self._url}/{resourceUUID}/validateItemsEvent",
+            url=f"{self._url}/{resource_uuid}/validateItemsEvent",
             json=data_transform_01(action=action, data=data)
         )
         return print_response(res) 
 
-    def get_uri(self, resourceUUID):
+    def get_uri(self, resource_uuid):
         res = SESS.get(
-            url=f"{self._url}/{resourceUUID}/uri",
+            url=f"{self._url}/{resource_uuid}/uri",
         )
         return print_response(res)
 
-    def class_count(self, resourceUUID:str, pkg_name:str, class_name_li:list):
+    def class_count(self, resource_uuid:str, pkg_name:str, class_name_li:list):
         class_name_li = [f"{pkg_name}.{elem}" for elem in class_name_li]
         res = SESS.get(
-            url=f"{self._url}/{resourceUUID}/class/count",
+            url=f"{self._url}/{resource_uuid}/class/count",
             params={'classNameList': class_name_li, 'offset': 0, 'limit':10}
         )
         return print_response(res)
