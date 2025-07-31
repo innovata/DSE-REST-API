@@ -299,7 +299,7 @@
       "kind": "Storage",
       "type": "IndexUnit",
       "created": 1745657299647,
-      "lastModified": 1751710779547,
+      "lastModified": 1753816071584,
       "permissions": {
         "read": true,
         "write": false,
@@ -631,6 +631,24 @@
       }
     },
     {
+      "id": "6eb0cd0a-9630-42d0-8a44-7b31701e4a4c",
+      "resourceId": "Data_Lake_01",
+      "projectId": "dp-jle69ptrain01-365631",
+      "resourceUUID": "6eb0cd0a-9630-42d0-8a44-7b31701e4a4c",
+      "workspaceId": "dw-jle69ptrain01-365631-traindataengineering",
+      "name": "Data_Lake_01",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1753851812888,
+      "lastModified": 1753860930425,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
       "id": "25626555-7e90-4907-91e5-313870a6bb1d",
       "resourceId": "DummyData",
       "projectId": "dp-netvibestrainingprogram-881699",
@@ -840,6 +858,24 @@
       "type": "IndexUnit",
       "created": 1751698021059,
       "lastModified": 1751698021004,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "5dc80d66-8d76-4e94-8754-fc27538f3574",
+      "resourceId": "File disk",
+      "projectId": "dp-jle69ptrain01-365631",
+      "resourceUUID": "5dc80d66-8d76-4e94-8754-fc27538f3574",
+      "workspaceId": "dw-jle69ptrain01-365631-traindataengineering",
+      "name": "File disk",
+      "creator": "jle69_gmail",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1753848711999,
+      "lastModified": 1753849438892,
       "permissions": {
         "read": true,
         "write": true,
@@ -2370,6 +2406,78 @@
       "type": "ObjectStorage",
       "created": 1734677241167,
       "lastModified": 1734677241158,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "ba86371d-cbf2-4b2e-83db-00fe38438301",
+      "resourceId": "dhkim storage01",
+      "projectId": "dp-dhkim01-426726",
+      "resourceUUID": "ba86371d-cbf2-4b2e-83db-00fe38438301",
+      "workspaceId": "dw-dhkim01-426726-dhkimworkspace01",
+      "name": "dhkim storage01",
+      "creator": "c00005317959",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1753847162704,
+      "lastModified": 1753847162709,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "8fa5a470-9fb1-437e-af99-23344d2fb5fa",
+      "resourceId": "dhkim_SGI01",
+      "projectId": "dp-dhkim01-426726",
+      "resourceUUID": "8fa5a470-9fb1-437e-af99-23344d2fb5fa",
+      "workspaceId": "dw-dhkim01-426726-dhkimworkspace01",
+      "name": "dhkim_SGI01",
+      "creator": "c00005317959",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1753851982491,
+      "lastModified": 1753853894464,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "5a1f33fd-c1ad-49b8-964c-5c0e63d4aecd",
+      "resourceId": "dhkim_SGI02_cleanData",
+      "projectId": "dp-dhkim01-426726",
+      "resourceUUID": "5a1f33fd-c1ad-49b8-964c-5c0e63d4aecd",
+      "workspaceId": "dw-dhkim01-426726-dhkimworkspace01",
+      "name": "dhkim_SGI02_cleanData",
+      "creator": "c00005317959",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1753854383239,
+      "lastModified": 1753861625229,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "3594cc3f-7d93-4a7a-95af-45ac68b490bb",
+      "resourceId": "dhkim_SGI03_dirtyData",
+      "projectId": "dp-dhkim01-426726",
+      "resourceUUID": "3594cc3f-7d93-4a7a-95af-45ac68b490bb",
+      "workspaceId": "dw-dhkim01-426726-dhkimworkspace01",
+      "name": "dhkim_SGI03_dirtyData",
+      "creator": "c00005317959",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1753859526961,
+      "lastModified": 1753859526965,
       "permissions": {
         "read": true,
         "write": true,
