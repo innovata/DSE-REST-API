@@ -239,7 +239,7 @@ class ObjectStorage:
 
 
 
-def data_transform_01(action:str, data:list)->list:
+def gen_JsonEventData(action:str, data:list)->list:
     jsondata = []
     for d in data:
         jsondata.append({
@@ -256,7 +256,7 @@ class SemanticGraphIndex:
     def ingest(self, resource_uuid:str, data:list):
         res = SESS.post(
             url=f"{self._url}/{resource_uuid}/ingest",
-            json=data_transform_01("AddOrReplaceItem", data)
+            json=data
         )
         return print_response(res) 
 
@@ -269,7 +269,7 @@ class SemanticGraphIndex:
     def validateItemsEvent(self, resource_uuid:str, action:str, data:list):
         res = SESS.post(
             url=f"{self._url}/{resource_uuid}/validateItemsEvent",
-            json=data_transform_01(action=action, data=data)
+            json=gen_JsonEventData(action=action, data=data)
         )
         return print_response(res) 
 
@@ -294,3 +294,58 @@ class SemanticGraphIndex:
         return print_response(res) 
 
     
+
+class SGIModel:
+
+    def __init__(self, pkg_name:str, cls_name:str):
+        self.pkg_name = pkg_name
+        self.cls_name = cls_name
+        self.class_fullname = f"{pkg_name}.{cls_name}"
+
+    def gen_class(self):
+        self._cls_info = {
+            "action": "AddOrReplaceClass",
+            "classDefinition": {
+            "abstract": False,
+            "name": self.class_fullname,
+            "parents": ["core.Item"],
+            "attributes": [],
+            "annotations": []
+            }
+        }
+        return self 
+    
+    @property
+    def schema(self):
+        return self._cls_info if hasattr(self, '_cls_info') else None
+    
+    def gen_property(self, name:str, dtype:str, annotations:list=[]):
+        if not hasattr(self, '_cls_info'):
+            self.gen_class()
+        self._cls_info['classDefinition']['attributes'].append({
+            "name": name,
+            "type": dtype,
+            "annotations": annotations
+        })
+        return self
+    
+    def gen_items(self, data:list):
+        if not hasattr(self, '_cls_info'):
+            print("ERROR | 클래스 정의가 필요합니다. 먼저 gen_class()를 호출하세요.")
+        else:
+            n_digit = 3
+            self._item_infos = []
+            for i, item in enumerate(data):
+                item.update({'class': self.class_fullname})
+                if "uri" not in item:
+                    item['uri'] = f"{self.class_fullname}_{str(i).zfill(n_digit)}"
+
+                item_info = {"action": "AddOrReplaceItem", "item": item}
+                self._item_infos.append(item_info)
+        return self 
+
+    def gen_JsonEventData(self):
+        if not hasattr(self, '_item_infos'):
+            print("ERROR | 아이템 정의가 필요합니다. 먼저 gen_items()를 호출하세요.")
+        else:
+            return [self._cls_info] + self._item_infos

@@ -433,6 +433,24 @@
       }
     },
     {
+      "id": "7e1cbda5-14bb-4f38-89ac-ba5163fc949b",
+      "resourceId": "DATASET",
+      "projectId": "dp-netvibestrainingprogram-881699",
+      "resourceUUID": "7e1cbda5-14bb-4f38-89ac-ba5163fc949b",
+      "workspaceId": "dw-netvibestrainingprogram-881699-intermediatepartnerstraining",
+      "name": "DATASET",
+      "creator": "jle69",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1752565016996,
+      "lastModified": 1752565017030,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
       "id": "3eb778e6-a1fb-48a3-81a4-eeacba7282ea",
       "resourceId": "DATASET",
       "projectId": "901e3c05-6645-4ddb-b263-f87749f43231",
@@ -444,6 +462,24 @@
       "type": "ObjectStorage",
       "created": 1752297014907,
       "lastModified": 1752297014916,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "cb8ef631-61ed-4939-963a-eeb94882c147",
+      "resourceId": "DATASET",
+      "projectId": "dp-netvibestrainingprogram-881699",
+      "resourceUUID": "cb8ef631-61ed-4939-963a-eeb94882c147",
+      "workspaceId": "dw-netvibestrainingprogram-881699-advancedpartnerstraining",
+      "name": "DATASET",
+      "creator": "jle69",
+      "kind": "Storage",
+      "type": "ObjectStorage",
+      "created": 1751249374063,
+      "lastModified": 1752123921957,
       "permissions": {
         "read": true,
         "write": true,
@@ -642,6 +678,24 @@
       "type": "IndexUnit",
       "created": 1753851812888,
       "lastModified": 1753860930425,
+      "permissions": {
+        "read": true,
+        "write": true,
+        "execute": true
+      }
+    },
+    {
+      "id": "f62f92f5-9031-4495-972b-d9482ecf9685",
+      "resourceId": "DediTrainVelizy",
+      "projectId": "dp-netvibestrainingprogram-881699",
+      "resourceUUID": "f62f92f5-9031-4495-972b-d9482ecf9685",
+      "workspaceId": "dw-netvibestrainingprogram-881699-advancedpartnerstraining",
+      "name": "DediTrainVelizy",
+      "creator": "jle69",
+      "kind": "Storage",
+      "type": "IndexUnit",
+      "created": 1751263785021,
+      "lastModified": 1752123921957,
       "permissions": {
         "read": true,
         "write": true,
