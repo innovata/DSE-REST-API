@@ -329,11 +329,12 @@ class SGIModel:
         })
         return self
     
-    def gen_items(self, data:list):
+    def gen_items(self, data:list, auto_uri_digit:str=None):
         if not hasattr(self, '_cls_info'):
             print("ERROR | 클래스 정의가 필요합니다. 먼저 gen_class()를 호출하세요.")
         else:
-            n_digit = 3
+            n_digit = auto_uri_digit if auto_uri_digit else len(str(len(data))) + 1
+            
             self._item_infos = []
             for i, item in enumerate(data):
                 item.update({'class': self.class_fullname})
@@ -349,3 +350,4 @@ class SGIModel:
             print("ERROR | 아이템 정의가 필요합니다. 먼저 gen_items()를 호출하세요.")
         else:
             return [self._cls_info] + self._item_infos
+        

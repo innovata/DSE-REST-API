@@ -66,8 +66,8 @@ PYPI "https://pypi.org/project/dserestapi/" 를 참조하세요.
 
 본 패키지는 공식적으로 제공되는 프로그램이 아닙니다.  
 다쏘시스템에서는 다음 링크에서 공식적인 REST API를 제공합니다.  
-- https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADocQuickRefs/DSDocHome.htm   
-- https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADataFactoryStudioWS/datafactorystudio_v1.htm   
+- [Developer Assistance | Home](https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADocQuickRefs/DSDocHome.htm)
+- [Developer Assistance | Data Factory Studio APIs](https://media.3ds.com/support/documentation/developer/Cloud/en/DSDoc.htm?show=CAADataFactoryStudioWS/datafactorystudio_v1.htm)
 
 REST API를 활용하여 직접 클라이언트를 개발하는 것을 권장하며, 본 패키지는 편의를 위해 제공할 뿐 사용 기능 개선 및 버그에 대한 후속 작업을 지원하지 않습니다.  
 커맨드 라인 사용법은 지원하지 않으며, 본 패키지를 임포트하여 개별적으로 클라이언트를 개발하길 바랍니다.  
