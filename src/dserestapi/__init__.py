@@ -306,11 +306,11 @@ class SGIModel:
         self._cls_info = {
             "action": "AddOrReplaceClass",
             "classDefinition": {
-            "abstract": False,
-            "name": self.class_fullname,
-            "parents": ["core.Item"],
-            "attributes": [],
-            "annotations": []
+                "abstract": False,
+                "name": self.class_fullname,
+                "parents": ["core.Item"],
+                "attributes": [],
+                "annotations": []
             }
         }
         return self 
