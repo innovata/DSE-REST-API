@@ -330,24 +330,24 @@ class SGIModel:
         return self
     
     def gen_items(self, data:list, auto_uri_digit:str=None):
-        if not hasattr(self, '_cls_info'):
-            print("ERROR | 클래스 정의가 필요합니다. 먼저 gen_class()를 호출하세요.")
-        else:
-            n_digit = auto_uri_digit if auto_uri_digit else len(str(len(data))) + 1
-            
-            self._item_infos = []
-            for i, item in enumerate(data):
-                item.update({'class': self.class_fullname})
-                if "uri" not in item:
-                    item['uri'] = f"{self.class_fullname}_{str(i).zfill(n_digit)}"
+        n_digit = auto_uri_digit if auto_uri_digit else len(str(len(data))) + 1
+        
+        self._item_infos = []
+        for i, item in enumerate(data):
+            item.update({'class': self.class_fullname})
+            if "uri" not in item:
+                item['uri'] = f"{self.class_fullname}_{str(i).zfill(n_digit)}"
 
-                item_info = {"action": "AddOrReplaceItem", "item": item}
-                self._item_infos.append(item_info)
+            item_info = {"action": "AddOrReplaceItem", "item": item}
+            self._item_infos.append(item_info)
         return self 
 
     def gen_JsonEventData(self):
         if not hasattr(self, '_item_infos'):
             print("ERROR | 아이템 정의가 필요합니다. 먼저 gen_items()를 호출하세요.")
         else:
-            return [self._cls_info] + self._item_infos
+            if hasattr(self, "_cls_info"):
+                return [self._cls_info] + self._item_infos
+            else:
+                return self._item_infos 
         
