@@ -295,6 +295,13 @@ class SemanticGraphIndex:
 
     
 
+class SGIGenerator:
+
+    def __init__(self, sgi_name:str):
+        
+        pass
+
+
 class SGIModel:
 
     def __init__(self, pkg_name:str, cls_name:str):
@@ -350,4 +357,7 @@ class SGIModel:
                 return [self._cls_info] + self._item_infos
             else:
                 return self._item_infos 
+            
+
+
         
