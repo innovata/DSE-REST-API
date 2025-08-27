@@ -73,25 +73,34 @@ class Storages:
         stype:str, # 스토리지타입: "ObjectStorage", "IndexUnit" 
         name:str,
         description:str="",
-        config:dict=None,
+        project_id:str=None,
+        workspace_id:str=None,
+        config:dict=None
     ):
 
+        # config 핸들러
         if stype == 'ObjectStorage':
             config = config if config else {}
         elif stype == 'IndexUnit':
             # SGI 는 반드시 config.datamodel 필드를 추가
             config = config if config else {"datamodel": {}} 
 
-        res = SESS.post(
-            self._url,
-            json={
-                "@class": stype,
-                "name": name,
-                "description": description,
-                "resourceId": name,
-                "config": config,
-            }
-        )
+        params = {
+            "@class": stype,
+            "name": name,
+            "description": description,
+            "resourceId": name,
+            "config": config,
+        }
+
+        if project_id:
+            params.update({"projectId": project_id})
+
+        if workspace_id:
+            params.update({"workspaceId": workspace_id})
+
+
+        res = SESS.post(self._url, json=params)
         return print_response(res)
 
     # 스토리지 검색-1
