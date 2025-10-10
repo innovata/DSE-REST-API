@@ -302,13 +302,7 @@ class SemanticGraphIndex:
         )
         return print_response(res) 
 
-    
 
-class SGIGenerator:
-
-    def __init__(self, sgi_name:str):
-        
-        pass
 
 
 class SGIModel:
