@@ -168,6 +168,20 @@ class Storages:
 
 
 
+def delete_sgi(workspace_id:str, sgi_name:str):
+    api = Storages()
+    res = api.search_by_name(sgi_name, workspace_id)
+    cards = res.json()["cards"]
+    print(f"\nSGI 정보검색-->")
+    pp.pprint(cards)
+    if len(cards) == 1:
+        uuid = cards[0]["resourceUUID"]
+        api.delete(uuid)
+
+
+
+
+
 from tqdm import tqdm 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -304,63 +318,473 @@ class SemanticGraphIndex:
 
 
 
+"""
+응답코드가 2xx 또는 3xx 대역이 아닐 경우 아래와 같이 표시됩니다-->
+{ '_content': b'{"type":"about:blank","title":"Payload Too Large","status":4'
+              b'13,"detail":"Index unit ingestion input event list is too la'
+              b'rge. Max events is 50000 and current value is java.util.stre'
+              b'am.ReferencePipeline$Head@2c728462 Index unit ingestion inpu'
+              b't event list is too large. Max events is 50000 and current v'
+              b'alue is java.util.stream.ReferencePipeline$Head@2c728462","i'
+              b'nstance":"/data-factory/api/1/indexunit/4328c165-f473-477d-8'
+              b'a79-9885ebcd8008/ingest"}',
+  '_content_consumed': True,
+  '_next': None,
+  'connection': <requests.adapters.HTTPAdapter object at 0x000001A91B8C5F70>,
+  'cookies': <RequestsCookieJar[]>,
+  'elapsed': datetime.timedelta(seconds=4, microseconds=23094),
+  'encoding': None,
+  'headers': {'content-type': 'application/problem+json', 'transfer-encoding': 'chunked', 'date': 'Mon, 22 Sep 2025 06:29:11 GMT', 'server': 'Microsoft-IIS/7.0'},
+  'history': [],
+  'raw': <urllib3.response.HTTPResponse object at 0x000001A94CFD0F70>,
+  'reason': 'Request Entity Too Large',
+  'request': <PreparedRequest [POST]>,
+  'status_code': 413,
+  'url': 'https://r1132100527066-apk2-sgi.3dexperience.3ds.com:443/data-factory/resources/v1/indexunit/4328c165-f473-477d-8a79-9885ebcd8008/ingest'}
+"""
 
-class SGIModel:
 
-    def __init__(self, pkg_name:str, cls_name:str):
-        self.pkg_name = pkg_name
-        self.cls_name = cls_name
-        self.class_fullname = f"{pkg_name}.{cls_name}"
 
-    def gen_class(self):
-        self._cls_info = {
+############################################################
+# SGI 모델 정의 및 데이터 업로더 
+############################################################
+
+from tqdm import tqdm 
+
+# SGI 한개에 대해 모델링 & 데이터 관리 | 멀티 클래스 핸들링 
+class SGIModeler:
+
+    def __init__(self, project_id, workspace_id, sgi_name, sgi_desc="", creator="jle69_gmail", dbg_mode=False):
+        self.creator = creator 
+        self.project_id = project_id 
+        self.workspace_id = workspace_id
+
+        self.sgi_name = sgi_name
+        self.sgi_desc = sgi_desc
+        self._cls_li = [] # [{클래스명: SGIClass객체}]
+
+
+        self._dbg_mode = dbg_mode 
+
+    # 한 개 클래스&프로퍼티 정의 
+    def modeling_a_class(self, pkg_name, cls_name, data):
+        if len(data) > 0:
+            # 클래스에 대한 스키마 정의 | Property 정의
+            cls = SGIClass(pkg_name=pkg_name, cls_name=cls_name)
+            cls.create_class_conf(data)
+
+            # 클래스 저장 
+            self._cls_li.append(cls)
+        else:
+            print(f"\nERROR | {[pkg_name, cls_name]} | 데이터가 없으면 모델링할 수 없습니다.")
+        
+        return self
+    
+    def create_sgi_define_classes(self):
+        if len(self._cls_li) > 0:
+            data_modeling_conf = {
+                "datamodel": {
+                    "classes": [cls.creatable_class_conf for cls in self._cls_li]
+                }
+            }
+            if self._dbg_mode:
+                print(f"\nSGI생성시 클래스 모델링 Conf.-->")
+                pp.pprint(data_modeling_conf)
+
+
+            res = Storages().create(
+                stype="IndexUnit",
+                name=self.sgi_name,
+                description=self.sgi_desc,
+                project_id=self.project_id,
+                workspace_id=self.workspace_id,
+                config=data_modeling_conf
+            )
+
+            if res.status_code >= 200 and res.status_code < 300:
+                print("\nSGI Modeling SUCCESS.", [res, self.sgi_name, self.workspace_id])
+                return res.json()
+            else: 
+                print(f"\nSGI Modeling FAIL.", [res, self.sgi_name, self.workspace_id])
+                pp.pprint(res.json())
+                print(f"\nSGI 모델링 CONFIG-->")
+                pp.pprint(data_modeling_conf)
+        else:
+            print(f"\nERROR | 클래스&프로퍼티를 먼저 정의하세요.")
+
+    # 기존 SGI에 클래스들을 추가 정의한다
+    def add_classes_definition(self, resource_uuid:str):
+        if len(self._cls_li) > 0:
+            data_modeling_conf = [cls.addable_class_conf for cls in self._cls_li]
+            
+            if self._dbg_mode:
+                print(f"\n추가 클래스 모델링 Conf.-->")
+                pp.pprint(data_modeling_conf)
+        
+            self._upload(resource_uuid, data_modeling_conf)
+        else:
+            print(f"\nERROR | 클래스&프로퍼티를 먼저 정의하세요.")
+    
+    # 한 개 클래스의 실데이터를 업로드 
+    def upload_data(self, pkg_name, cls_name, data, resource_uuid:str):
+        cls = SGIClass(pkg_name=pkg_name, cls_name=cls_name)
+        # 클래서의 데이터를 Conf 로 변환
+        cls.create_data_conf(data)
+
+        # 5만 라인씩 데이터 분리 
+        step = 5*pow(10,4)
+        data_splits = []
+        for i in range(0, len(cls.data_conf), step):
+            data_splits.append(cls.data_conf[i:i+step])
+
+        # 업로드 
+        with tqdm(total=len(data_splits), desc="실데이터 업로드중(5만 라인씩)") as pbar:
+            for data_split in data_splits:
+                self._upload(resource_uuid, data_split)
+                pbar.update(1)
+        return 
+    
+    def _upload(self, resource_uuid, json_event_data):
+        try:
+            api = SemanticGraphIndex()
+            res = api.ingest(resource_uuid=resource_uuid, data=json_event_data)
+            
+            # 응답이 올때까지 기다림
+            while True:
+                if res:
+                    break 
+        except Exception as e:
+            print(f"\nERROR | {e} | resource_uuid--> {resource_uuid} | json_event_data-->")
+            pp.pprint(json_event_data)
+
+
+    # SGI 데이터만 삭제 | 모델링 유지
+    def clear_data(self, resource_uuid:str):
+        api = Storages()
+        res = api.clear(resource_uuid=resource_uuid)
+    
+    # SGI 통째로 삭제 
+    def delete_sgi(self, resource_uuid:str):
+        api = Storages()
+        res = api.delete(resource_uuid=resource_uuid)
+
+
+
+from datetime import datetime, date
+
+class SGIClass:
+
+    def __init__(self, cls_name, pkg_name="com", dbg_mode=False):
+        self.pkg_name = pkg_name 
+        self.cls_name = cls_name 
+        self.cls_fullname = f"{pkg_name}.{cls_name}" 
+        self.properties_v1 = []
+        self.properties_v2 = []
+        self._dbg_mode = dbg_mode 
+
+    # SGI Class Conf 생성 | 주어진 데이터로 데이터-타입 정의 후 프로퍼티 저장
+    def create_class_conf(self, data):
+
+        # 데이터-타입 정의를 위한 데이터구조 변환 
+        doc = {c: [] for c in list(data[0])}
+        for d in data:
+            for k,v in d.items():
+                doc.get(k).append(v)
+        if self._dbg_mode:
+            print(f"\n변환된 데이터구조-->")
+            pp.pprint(doc)
+
+        # 컬럼별 데이터-타입 정의 
+        for column, values in doc.items():
+            # 클래스 정의시, uri 는 제외한다
+            if column != "uri":
+                for v in values:
+                    p = SGIProperty(column, v)
+                    dataType, dataStructure = p.dataType, p.dataStructure
+
+                    if isinstance(dataType, str) and isinstance(dataStructure, str):
+                        # 데이터-타입을 찾았으면 멈춘다
+                        self.properties_v1.append(p.property_conf_v1)
+                        self.properties_v2.append(p.property_conf_v2)
+                        break 
+
+        # SGI 생성용 스키마 Conf. 정의
+        self.creatable_class_conf = {
+            "name": self.cls_name,
+            "parents": [],
+            "pkg": self.pkg_name,
+            "attributes": self.properties_v1
+        }
+        if self._dbg_mode:
+            print(f"\nSGI 생성용 스키마 Conf. 정의-->")
+            pp.pprint(self.creatable_class_conf)
+
+        # SGI 생성후 클래스 추가용 스키마 Conf. 정의
+        self.addable_class_conf = {
             "action": "AddOrReplaceClass",
             "classDefinition": {
                 "abstract": False,
-                "name": self.class_fullname,
+                "name": self.cls_fullname,
                 "parents": ["core.Item"],
-                "attributes": [],
+                "attributes": self.properties_v2,
                 "annotations": []
             }
         }
+        if self._dbg_mode:
+            print(f"\nSGI 생성후 클래스 추가용 스키마 Conf. 정의-->")
+            pp.pprint(self.addable_class_conf)
+
         return self 
-    
-    @property
-    def schema(self):
-        return self._cls_info if hasattr(self, '_cls_info') else None
-    
-    def gen_property(self, name:str, dtype:str, annotations:list=[]):
-        if not hasattr(self, '_cls_info'):
-            self.gen_class()
-        self._cls_info['classDefinition']['attributes'].append({
-            "name": name,
-            "type": dtype,
-            "annotations": annotations
-        })
-        return self
-    
-    def gen_items(self, data:list, auto_uri_digit:str=None):
+
+    # 실데이터 Conf. 정의
+    def create_data_conf(self, data:list, auto_uri_digit:str=None):
         n_digit = auto_uri_digit if auto_uri_digit else len(str(len(data))) + 1
         
-        self._item_infos = []
+        self.data_conf = []
+
         for i, item in enumerate(data):
-            item.update({'class': self.class_fullname})
+            # 패키지명+클래스명 을 합쳐서 클래스명으로 할당해야한다.
+            item.update({'class': self.cls_fullname})
+
+            # 원데이터에 'uri'(=id) 가 없다면 시스템에서 자동으로 생성해준다 
             if "uri" not in item:
-                item['uri'] = f"{self.class_fullname}_{str(i).zfill(n_digit)}"
+                item['uri'] = f"{self.cls_fullname}_{str(i).zfill(n_digit)}"
 
-            item_info = {"action": "AddOrReplaceItem", "item": item}
-            self._item_infos.append(item_info)
-        return self 
+            # 원데이터에 'datetime, date' 객체는 JSON-Serialize 할 수 없으므로 스트링으로 강제변환된다
+            # 스키마상 데이터-타입이 'DateTime'으로 정의되어 있다면, 스트링으로 데이터를 업로드하더라도 SGI 안에서 자동으로 파싱된다
+            for k,v in item.items():
+                if isinstance(v, datetime) or isinstance(v, date):
+                    item[k] = datetime_obj_conversion(v)
+                elif isinstance(v, list):
+                    item[k] = [datetime_obj_conversion(v) for elem in v]
+                else:
+                    pass 
 
-    def gen_JsonEventData(self):
-        if not hasattr(self, '_item_infos'):
-            print("ERROR | 아이템 정의가 필요합니다. 먼저 gen_items()를 호출하세요.")
+            self.data_conf.append({
+                "action": "AddOrReplaceItem", 
+                "item": item
+            })
+            if self._dbg_mode:
+                print(f"\n데이터 업로드 Conf.-->")
+                pp.pprint(self.data_conf)
+
+        return self
+
+    
+
+def datetime_obj_conversion(value):
+    if isinstance(value, datetime):
+        # '2025-10-18T17:41:00'
+        return value.isoformat()[:19]
+    elif isinstance(value, date):
+        # '2025-10-18'
+        return value.isoformat()[:10]
+    else:
+        return value 
+
+from datetime import datetime, date, timedelta 
+import re 
+
+def datetime_obj_conversion_v1(v):
+    if isinstance(v, datetime): 
+        v1 = v if v < datetime(1970, 1, 1) else v.astimezone()
+        if v1.hour == 15:
+            v1 += timedelta(hours=+9)
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", v1.isoformat())
+        if m:
+            v2 = m.group(1)
+            # v2 = v2.replace("T", "'T'")
+            # print("Date타입을 스트링으로-->", [k, v, v1, v2])
+            return v2
         else:
-            if hasattr(self, "_cls_info"):
-                return [self._cls_info] + self._item_infos
-            else:
-                return self._item_infos 
-            
+            v2 = v1.isoformat()[:10]
+            return v2
+    elif isinstance(v, date):
+        v1 = v if v < date(1970, 1, 1) else v.astimezone()
+        return v1.isoformat()
+    else:
+        return v
 
 
-        
+
+from datetime import datetime, date 
+from decimal import Decimal 
+
+class SGIProperty:
+
+    def __init__(self, name:str, value:any):
+        self.name = name 
+        self.dataType, self.dataStructure = self._parse(value)
+
+    def _parse(self, value):  
+        # if isinstance(value, str):
+        #     return "String", "Singleton"
+        # elif isinstance(value, int):
+        #     return "Integer", "Singleton"
+        # elif isinstance(value, float):
+        #     return "Float", "Singleton"
+        # elif isinstance(value, datetime):
+        #     # datetime도 date를 상속하므로 순서가 중요
+        #     return "DateTime", "Singleton"
+        # elif isinstance(value, date):
+        #     return "Date", "Singleton"
+        # elif isinstance(value, list):
+        #     if isinstance(value[0], str):
+        #         return "String", "List"
+        #     elif isinstance(value[0], dict):
+        #         return "HierarchicalString", "List"
+        #     else:
+        #         print(f"\nERROR | value--> {value}")
+        #         raise 
+        # else:
+        #     return "String", "Singleton"
+
+        dtype = judge_sgi_dtype(value)
+        dstruc = judge_sgi_dstruc(value)
+        return dtype, dstruc 
+    
+    # SGI 생성용 클래스 정의를 위한 프로퍼티 Conf. 생성 
+    @property 
+    def property_conf_v1(self):
+        return {
+            "name": self.name,
+            "type": {
+                "dataType": self.dataType,
+                "dataStructure": self.dataStructure
+            },
+            "annotation": {}
+        }
+    
+    # SGI 생성후 클래스 추가용 프로퍼티 Conf. 정의
+    @property 
+    def property_conf_v2(self):
+        return {
+            "name": self.name,
+            "type": self.dataType,
+            "annotations": []
+        }
+
+
+# 'dataType' 결정
+def judge_sgi_dtype(value):
+    if isinstance(value, bool):
+        return "Boolean"
+    elif isinstance(value, str):
+        # 길이 255자 이하: "String"
+        # 255자 초과: "Text"
+        return "String" if len(value) <= 256 else "Text"
+    elif isinstance(value, int):
+        return "Integer"
+    elif isinstance(value, float):
+        return "Float"
+    elif isinstance(value, datetime):
+        # datetime도 date를 상속하므로 순서가 중요 (datetime을 먼저 판단해야)
+        # tzinfo가 None이면 로컬 날짜시간으로 간주
+        if value.tzinfo is None:
+            return "LocalDateTime"
+        else:
+            return "DateTime"
+    elif isinstance(value, date):
+        return "Date"
+    elif isinstance(value, Decimal):
+        return "Decimal"
+    elif is_embedding_object(value):
+        return "Embedding"
+    elif is_geo_type(value):
+        return "Geo"
+    elif is_hierarchical_string(value):
+        return "HierarchicalString"
+    else:
+        # 이외의 모든 경우는 "스트링" 처리
+        return "String"
+
+
+def is_embedding_object(obj, min_dim=5, dtype=(float, int)):
+    # 리스트나 튜플이고, 길이가 min_dim 이상이며, 모든 원소가 float 또는 int인 경우 판정
+    if isinstance(obj, (list, tuple)) and len(obj) >= min_dim:
+        return all(isinstance(x, dtype) for x in obj)
+    return False
+
+
+def is_geo_type(value):
+    # (lat, lon) 튜플/리스트
+    if isinstance(value, (tuple, list)) and len(value) == 2:
+        try:
+            lat, lon = float(value[0]), float(value[1])
+            if -90 <= lat <= 90 and -180 <= lon <= 180:
+                return True
+        except Exception:
+            pass
+
+    # {'lat': x, 'lon':y} 또는 {'latitude': x, 'longitude': y}
+    if isinstance(value, dict):
+        keys = list(value.keys())
+        if ('lat' in keys and 'lon' in keys) or ('latitude' in keys and 'longitude' in keys):
+            try:
+                lat = float(value.get('lat', value.get('latitude')))
+                lon = float(value.get('lon', value.get('longitude')))
+                if -90 <= lat <= 90 and -180 <= lon <= 180:
+                    return True
+            except Exception:
+                pass
+        # GeoJSON Point {"type": "Point", "coordinates": [...]}
+        if value.get('type') == 'Point' and isinstance(value.get('coordinates'), (list, tuple)):
+            coords = value['coordinates']
+            if len(coords) == 2:
+                try:
+                    lon, lat = float(coords[0]), float(coords[1])
+                    if -90 <= lat <= 90 and -180 <= lon <= 180:
+                        return True
+                except Exception:
+                    pass
+
+    # 좌표 문자열 판독 (예: "37.511, 126.982")
+    if isinstance(value, str):
+        parts = value.split(',')
+        if len(parts) == 2:
+            try:
+                lat, lon = float(parts[0].strip()), float(parts[1].strip())
+                if -90 <= lat <= 90 and -180 <= lon <= 180:
+                    return True
+            except Exception:
+                pass
+    return False
+
+
+def is_hierarchical_string(s):
+    if not isinstance(s, str):
+        return False
+    # 주요 구분자를 포함하고, split 후 2개 이상의 segment가 있을 것!
+    delimiters = ['/', '\\', '>']
+    for delim in delimiters:
+        if delim in s:
+            segments = [seg for seg in s.split(delim) if seg]
+            if len(segments) >= 2:
+                return True
+    return False
+
+
+# 'dataStructure' 결정
+def judge_sgi_dstruc(value):
+    if isinstance(value, list):
+        return "List"
+    elif isinstance(value, dict):
+        return "Map"
+    else:
+        return "Singleton"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
