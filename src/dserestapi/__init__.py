@@ -350,6 +350,7 @@ class SemanticGraphIndex:
 ############################################################
 
 from tqdm import tqdm 
+from ipylib.ilist import split_data
 
 # SGI 한개에 대해 모델링 & 데이터 관리 | 멀티 클래스 핸들링 
 class SGIModeler:
@@ -372,6 +373,9 @@ class SGIModeler:
             # 클래스에 대한 스키마 정의 | Property 정의
             cls = SGIClass(pkg_name=pkg_name, cls_name=cls_name)
             cls.create_class_conf(data)
+
+            print(f"\nSGI클래스 신규생성 모델링정보-->")
+            pp.pprint(cls.creatable_class_conf)
 
             # 클래스 저장 
             self._cls_li.append(cls)
@@ -418,7 +422,7 @@ class SGIModeler:
             data_modeling_conf = [cls.addable_class_conf for cls in self._cls_li]
             
             if self._dbg_mode:
-                print(f"\n추가 클래스 모델링 Conf.-->")
+                print(f"\nSGI클래스 추가 모델링정보-->")
                 pp.pprint(data_modeling_conf)
         
             self._upload(resource_uuid, data_modeling_conf)
@@ -428,19 +432,17 @@ class SGIModeler:
     # 한 개 클래스의 실데이터를 업로드 
     def upload_data(self, pkg_name, cls_name, data, resource_uuid:str):
         cls = SGIClass(pkg_name=pkg_name, cls_name=cls_name)
-        # 클래서의 데이터를 Conf 로 변환
+        # 클래스의 데이터를 Conf 로 변환
         cls.create_data_conf(data)
 
         # 5만 라인씩 데이터 분리 
-        step = 5*pow(10,4)
-        data_splits = []
-        for i in range(0, len(cls.data_conf), step):
-            data_splits.append(cls.data_conf[i:i+step])
+        dataset = split_data(data=cls.data_conf, size=5*pow(10,4))
+
 
         # 업로드 
-        with tqdm(total=len(data_splits), desc="실데이터 업로드중(5만 라인씩)") as pbar:
-            for data_split in data_splits:
-                self._upload(resource_uuid, data_split)
+        with tqdm(total=len(dataset), desc="실데이터 업로드중(5만 라인씩)") as pbar:
+            for _data in dataset:
+                self._upload(resource_uuid, _data)
                 pbar.update(1)
         return 
     
@@ -455,7 +457,6 @@ class SGIModeler:
                     break 
         except Exception as e:
             print(f"\nERROR | {e} | resource_uuid--> {resource_uuid} | json_event_data-->")
-            pp.pprint(json_event_data)
 
 
     # SGI 데이터만 삭제 | 모델링 유지
@@ -471,6 +472,7 @@ class SGIModeler:
 
 
 from datetime import datetime, date
+import math 
 
 class SGIClass:
 
@@ -552,11 +554,14 @@ class SGIClass:
 
             # 원데이터에 'datetime, date' 객체는 JSON-Serialize 할 수 없으므로 스트링으로 강제변환된다
             # 스키마상 데이터-타입이 'DateTime'으로 정의되어 있다면, 스트링으로 데이터를 업로드하더라도 SGI 안에서 자동으로 파싱된다
-            for k,v in item.items():
+            for k,v in item.copy().items():
                 if isinstance(v, datetime) or isinstance(v, date):
                     item[k] = datetime_obj_conversion(v)
                 elif isinstance(v, list):
                     item[k] = [datetime_obj_conversion(v) for elem in v]
+                elif isinstance(v, int) or isinstance(v, float):
+                    if v == math.nan:
+                        item[k] = None 
                 else:
                     pass 
 
