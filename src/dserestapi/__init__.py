@@ -351,7 +351,7 @@ class SemanticGraphIndex:
 from tqdm import tqdm 
 from ipylib.ilist import split_data
 
-# SGI 한개에 대해 모델링 & 데이터 관리 | 멀티 클래스 핸들링 
+# 'SGI 한개'에 대해 모델링 & 데이터 관리 | 멀티 클래스 핸들링 
 class SGIModeler:
 
     def __init__(self, project_id, workspace_id, sgi_name, sgi_desc="", creator="jle69_gmail", dbg_mode=False):
@@ -367,10 +367,10 @@ class SGIModeler:
         self._dbg_mode = dbg_mode 
 
     # 한 개 클래스&프로퍼티 정의 
-    def modeling_a_class(self, pkg_name, cls_name, data):
+    def modeling_a_class(self, pkg_name, cls_name, data, dtypemap:dict=None):
         if len(data) > 0:
             # 클래스에 대한 스키마 정의 | Property 정의
-            cls = SGIClass(pkg_name=pkg_name, cls_name=cls_name)
+            cls = SGIClass(pkg_name=pkg_name, cls_name=cls_name, dtypemap=dtypemap)
             cls.create_class_conf(data)
 
             print(f"\nSGI클래스 신규생성 모델링정보-->")
@@ -437,7 +437,6 @@ class SGIModeler:
         # 5만 라인씩 데이터 분리 
         dataset = split_data(data=cls.data_conf, size=5*pow(10,4))
 
-
         # 업로드 
         with tqdm(total=len(dataset), desc="실데이터 업로드중(5만 라인씩)") as pbar:
             for _data in dataset:
@@ -472,22 +471,54 @@ class SGIModeler:
 
 from datetime import datetime, date
 import math 
+import pandas as pd 
+import numpy as np 
 
 class SGIClass:
 
-    def __init__(self, cls_name, pkg_name="com", dbg_mode=False):
+    def __init__(self, cls_name, pkg_name="com", dtypemap:dict=None, dbg_mode=False):
         self.pkg_name = pkg_name 
         self.cls_name = cls_name 
         self.cls_fullname = f"{pkg_name}.{cls_name}" 
         self.properties_v1 = []
         self.properties_v2 = []
+        self.dtypemap = dtypemap
         self._dbg_mode = dbg_mode 
+
+    # 데이터 청소
+    def _clean_data(self, data):
+        print(f"데이터 청소 시작 | {datetime.now()}")
+        df = pd.DataFrame(data)
+        
+        # DataFrame 전체를 numpy 배열로 변환 후 무한대 및 NaN 처리
+        # cleaned_array = np.nan_to_num(
+        #     df.to_numpy(),
+        #     nan=0.0,
+        #     posinf=sys.float_info.max,
+        #     neginf=-sys.float_info.max
+        # )
+        # # 다시 DataFrame으로 변환 (원래 인덱스와 컬럼 유지)
+        # df_cleaned = pd.DataFrame(cleaned_array, index=df.index, columns=df.columns)
+
+        # df = df.fillna(value=None)
+        # df_cleaned = df.replace({
+        #     np.inf: sys.float_info.max,
+        #     -np.inf: -sys.float_info.max,
+        # })
+        print(sys.float_info.max)
+        df_cleaned = df.replace([np.inf, -np.inf], pd.NA).fillna(value=None, method=None)
+
+        print(f"데이터 청소 종료 | {datetime.now()}")
+        return df_cleaned.to_dict("records")
 
     # SGI Class Conf 생성 | 주어진 데이터로 데이터-타입 정의 후 프로퍼티 저장
     def create_class_conf(self, data):
 
+        # data = self._clean_data(data)
+
         # 데이터-타입 정의를 위한 데이터구조 변환 
-        doc = {c: [] for c in list(data[0])}
+        # 클래스 정의시, uri 는 제외한다
+        doc = {c: [] for c in list(data[0]) if c not in ["uri"]}
         for d in data:
             for k,v in d.items():
                 doc.get(k).append(v)
@@ -497,17 +528,16 @@ class SGIClass:
 
         # 컬럼별 데이터-타입 정의 
         for column, values in doc.items():
-            # 클래스 정의시, uri 는 제외한다
-            if column != "uri":
-                for v in values:
-                    p = SGIProperty(column, v)
-                    dataType, dataStructure = p.dataType, p.dataStructure
+            dtype = self.dtypemap[column] if self.dtypemap else None 
+            for v in values:
+                p = SGIProperty(column, v, dtype)
+                dataType, dataStructure = p.dataType, p.dataStructure
 
-                    if isinstance(dataType, str) and isinstance(dataStructure, str):
-                        # 데이터-타입을 찾았으면 멈춘다
-                        self.properties_v1.append(p.property_conf_v1)
-                        self.properties_v2.append(p.property_conf_v2)
-                        break 
+                if isinstance(dataType, str) and isinstance(dataStructure, str):
+                    # 데이터-타입을 찾았으면 멈춘다
+                    self.properties_v1.append(p.property_conf_v1)
+                    self.properties_v2.append(p.property_conf_v2)
+                    break 
 
         # SGI 생성용 스키마 Conf. 정의
         self.creatable_class_conf = {
@@ -539,6 +569,10 @@ class SGIClass:
 
     # 실데이터 Conf. 정의
     def create_data_conf(self, data:list, auto_uri_digit:str=None):
+        # 데이터 청소
+        # data = self._clean_data(data)
+
+        # SGI uri 값 자동셋팅 변수
         n_digit = auto_uri_digit if auto_uri_digit else len(str(len(data))) + 1
         
         self.data_conf = []
@@ -558,9 +592,8 @@ class SGIClass:
                     item[k] = datetime_obj_conversion(v)
                 elif isinstance(v, list):
                     item[k] = [datetime_obj_conversion(v) for elem in v]
-                elif isinstance(v, int) or isinstance(v, float):
-                    if v == math.nan:
-                        item[k] = None 
+                elif isinstance(v, float):
+                    item[k] = not_json_serializable_conversion(v) 
                 else:
                     pass 
 
@@ -573,7 +606,17 @@ class SGIClass:
                 pp.pprint(self.data_conf)
 
         return self
-
+    
+# SGI에 데이터를 업로드할 때 JSON Serialize를 하는데, 변환 불가능한 값을 강제로 바꿔준다
+def not_json_serializable_conversion(v):
+    if v in [math.nan, np.nan]:
+        return None 
+    elif v in [math.inf, np.inf]:
+        return sys.float_info.max 
+    elif v in [-math.inf, -np.inf]:
+        return -sys.float_info.max 
+    else:
+        return v 
     
 
 def datetime_obj_conversion(value):
@@ -616,33 +659,31 @@ from decimal import Decimal
 
 class SGIProperty:
 
-    def __init__(self, name:str, value:any):
+    # 파이썬 데이터타입 : SGI 데이터타입
+    _dmap = {
+        "bool": "Boolean",
+        "str": "String",
+        "int": "Integer",
+        "float": "Float",
+        "datetime": "DateTime",
+        "date": "Date",
+        "decimal": "Decimal"
+    }
+
+    def __init__(self, name:str, value:any, dtype:str=None):
         self.name = name 
-        self.dataType, self.dataStructure = self._parse(value)
+        if dtype is None:
+            self.dtype = judge_sgi_dtype(value)
+        else:
+            if dtype in list(self._dmap):
+                self.dtype = self._dmap[dtype]
+            else:
+                self.dtype = judge_sgi_dtype(value)
+
+        self.dstruc = judge_sgi_dstruc(value)
+
 
     def _parse(self, value):  
-        # if isinstance(value, str):
-        #     return "String", "Singleton"
-        # elif isinstance(value, int):
-        #     return "Integer", "Singleton"
-        # elif isinstance(value, float):
-        #     return "Float", "Singleton"
-        # elif isinstance(value, datetime):
-        #     # datetime도 date를 상속하므로 순서가 중요
-        #     return "DateTime", "Singleton"
-        # elif isinstance(value, date):
-        #     return "Date", "Singleton"
-        # elif isinstance(value, list):
-        #     if isinstance(value[0], str):
-        #         return "String", "List"
-        #     elif isinstance(value[0], dict):
-        #         return "HierarchicalString", "List"
-        #     else:
-        #         print(f"\nERROR | value--> {value}")
-        #         raise 
-        # else:
-        #     return "String", "Singleton"
-
         dtype = judge_sgi_dtype(value)
         dstruc = judge_sgi_dstruc(value)
         return dtype, dstruc 
