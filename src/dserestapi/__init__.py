@@ -671,22 +671,19 @@ class SGIProperty:
     }
 
     def __init__(self, name:str, value:any, dtype:str=None):
+        # print(f"SGIProperty--> {[name, value, dtype]}")
+
         self.name = name 
+
         if dtype is None:
-            self.dtype = judge_sgi_dtype(value)
+            self.dataType = judge_sgi_dtype(value)
         else:
             if dtype in list(self._dmap):
-                self.dtype = self._dmap[dtype]
+                self.dataType = self._dmap[dtype]
             else:
-                self.dtype = judge_sgi_dtype(value)
+                self.dataType = judge_sgi_dtype(value)
 
-        self.dstruc = judge_sgi_dstruc(value)
-
-
-    def _parse(self, value):  
-        dtype = judge_sgi_dtype(value)
-        dstruc = judge_sgi_dstruc(value)
-        return dtype, dstruc 
+        self.dataStructure = judge_sgi_dstruc(value)
     
     # SGI 생성용 클래스 정의를 위한 프로퍼티 Conf. 생성 
     @property 
